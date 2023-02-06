@@ -1,6 +1,7 @@
 {% extends 'base/base.html' %}
 
 {% block start %}
+{% if user.is_authenticated %}
 <div class="container">
 					
     <div class="row">
@@ -91,19 +92,20 @@
             </div>  <!-- card .// -->
             <div class="card">
                 <div class="card-body">
+                        {% if cart.coupon %}
                         <dl class="dlist-align">
                           <dt>Discount:</dt>
-                          <dd class="text-right">USD {{ cart.coupon.discount_price }}</dd>
+                          <dd class="text-right">Rs. {{ cart.coupon.discount_price }}</dd>
                         </dl>
-            
+                        {% endif %}
                         <dl class="dlist-align">
                           <dt>Total:</dt>
-                          <dd class="text-right  h5"><strong>${{ cart.get_cart_total }}</strong></dd>
+                          <dd class="text-right  h5"><strong>Rs. {{ cart.get_cart_total }}</strong></dd>
                         </dl>
 
                         <hr>
                         <p class="text-center mb-3">
-                            <img src="/media/images/misc/payments.png" height="26">
+                            <img src="/media/images/misc/payments.png" height="100">
                         </p>
                         
                 </div> <!-- card-body.// -->
@@ -112,4 +114,11 @@
     </div>
     
     </div>
+    {% else %}
+    <div class="alert alert-danger mt-3">
+        <p class="icontext">You haven't logged in yet</p>
+    </div>
+    <a href="/accounts/login/" class="btn  btn-primary mt-5 ml-5"> Sign in </a>
+        <a href="/accounts/register/" class="btn  btn-outline-primary mt-5 ml-2"> <span class="text">Register</span></a>
+    {% endif %}
 {% endblock start %}

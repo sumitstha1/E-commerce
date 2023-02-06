@@ -1,20 +1,25 @@
 {% extends 'base/base.html' %}
 
 {% block start %}
-<body>
+
+<div class="container">
+    <p class="font-weight-bold mt-3 text-center" style="font-size: 32px;">Payment for Cart</p>
     <form action="https://uat.esewa.com.np/epay/main" method="POST">
-    <input value="{{cart_item.get_cart_total}}" name="tAmt" type="hidden">
-    <input value="{{cart_item.get_cart_total}}" name="amt" type="hidden">
-    
-    <input value="0" name="txAmt" type="hidden">
-    <input value="0" name="psc" type="hidden">
-    <input value="0" name="pdc" type="hidden">
-    <input value="EPAYTEST" name="scd" type="hidden">
-    <input value="ee2c3ca1-696b-4cc5-a6be-2c40d929d453" name="pid" type="hidden">
-    <input value="http://merchant.com.np/page/esewa_payment_success?q=su" type="hidden" name="su">
-    <input value="http://merchant.com.np/page/esewa_payment_failed?q=fu" type="hidden" name="fu">
-    <input value="Submit" type="submit">
+        <label for="tAmt" class="form-label mt-5">Total Amount</label>
+        <input value="{{cart_item.get_cart_total}}" name="tAmt" type="text" class="form-control" readonly>
+        <input value="{{cart_item.get_cart_total}}" name="amt" type="hidden">
+        
+        <input value="0" name="txAmt" type="hidden">
+        <input value="0" name="psc" type="hidden">
+        <input value="0" name="pdc" type="hidden">
+        <input value="EPAYTEST" name="scd" type="hidden">
+        <label for="pid" class="form-label mt-3">Cart ID</label>
+        <input value="cart_id_{{cart_item.uid}}" name="pid" type="text" class="form-control" readonly>
+        <input value="http://merchant.com.np/page/esewa_payment_success?q=su" type="hidden" name="su">
+        <input value="http://merchant.com.np/page/esewa_payment_failed?q=fu" type="hidden" name="fu">
+        <input value="Submit" type="submit" class="btn btn-success mt-5">
     </form>
-</body>
+</div>
+
 {% endblock start %}
 
