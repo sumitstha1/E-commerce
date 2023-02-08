@@ -6,6 +6,7 @@ from django.dispatch import receiver
 import uuid
 from base.emails import send_account_activation_email
 from product.models import *
+import importlib
 
 # Create your models here.
 
@@ -31,13 +32,7 @@ class Cart(BaseModel):
         cart_items = self.cart_items.all()
         price = []
         for cart_item in cart_items:
-            price.append(cart_item.product.price)
-            if cart_item.color_variant:
-                color_variant_price = cart_item.color_variant.price
-                price.append(color_variant_price)
-            if cart_item.size_variant:
-                size_variant_price = cart_item.size_variant.price
-                price.append(size_variant_price)
+            price.append(cart_item.quantity * cart_item.product.price)
 
         if self.coupon:
             if self.coupon.minimum_amount < sum(price):
@@ -45,6 +40,10 @@ class Cart(BaseModel):
 
         return sum(price)
 
+    
+
+    def __str__(self) -> str:
+        return self.user.username
 
 
 class CartItems(BaseModel):
@@ -52,17 +51,17 @@ class CartItems(BaseModel):
     product = models.ForeignKey(Product, on_delete=models.SET_NULL, null=True, blank=True)
     color_variant = models.ForeignKey(ColorVariant, on_delete=models.SET_NULL, blank=True, null=True)
     size_variant = models.ForeignKey(SizeVariant, on_delete=models.SET_NULL, blank=True, null=True)
+    quantity = models.IntegerField(default=1)
+    total_amount = models.IntegerField(default=0)
 
     def get_product_price(self):
-        price = [self.product.price]
+        price = self.product.price
+        quantity = self.quantity
+        price = price * quantity
+        return price
 
-        if self.color_variant:
-            color_variant_price = self.color_variant.price
-            price.append(color_variant_price)
-        if self.size_variant:
-            size_variant_price = self.size_variant.price
-            price.append(size_variant_price)
-        return sum(price)
+    def __str__(self) -> str:
+        return self.product.product_name
 
 
 @receiver(post_save, sender = User)

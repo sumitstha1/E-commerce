@@ -1,0 +1,27 @@
+{% extends 'base/base.html' %}
+
+{% block start %}
+
+<div class="container mt-5 pt-5">
+    <div class="row">
+        
+        {% for brand_product in brands.product_cat.all %}
+        <div class="col-md-3">
+            <figure class="card card-product-grid">
+                <div class="img-wrap"> <img src="/media/{{brand_product.product_images.first.image}}"> </div>
+                <figcaption class="info-wrap border-top">
+                    <a href="{% url 'get_product' brand_product.slug %}" class="title">
+                        <b>{{brand_product.product_name}}</b></a>
+                    <div class="price mt-2">Rs. {{brand_product.price}}.00</div> <!-- price-wrap.// -->
+                </figcaption>
+            </figure> <!-- card // -->
+        </div> <!-- col.// -->
+
+        {% endfor %}
+        
+       
+    </div>
+
+</div>
+
+{% endblock start %}

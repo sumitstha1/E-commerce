@@ -6,6 +6,10 @@ from django.http import HttpResponseRedirect
 from .models import *
 from product.models import *
 
+import requests
+from django.http import JsonResponse
+from django.db.models import Q
+
 # Create your views here.
 
 def login_page(request):
@@ -75,17 +79,17 @@ def add_to_cart(request, uid):
     product = Product.objects.get(uid = uid)
     user = request.user
     cart, _ = Cart.objects.get_or_create(user = user, is_paid = False)
-    
     cart_item = CartItems.objects.create(cart = cart, product = product)
-
     if variant:
         variant = request.GET.get('variant')
         size_variant = SizeVariant.objects.get(size_name = variant)
         cart_item.size_variant = size_variant
         cart_item.save()
-        
+    
+
 
     return HttpResponseRedirect(request.META.get('HTTP_REFERER'))
+
 
 def remove_cart(request, cart_item_uid):
     try:
@@ -165,3 +169,76 @@ def esewa_payment(request, uid):
     } 
 
     return render(request, 'accounts/esewa.html', context)
+
+
+def esewa_verify(request):
+    uid = request.GET.get('uid')
+    amt = request.GET.get('amt')
+    refId = request.GET.get('refId')
+    url ="https://uat.esewa.com.np/epay/transrec"
+    d = {
+        'amt': amt,
+        'scd': 'EPAYTEST',
+        'rid': refId,
+        'pid': uid,
+    }
+    resp = requests.post(url, d)
+    print(resp.text)
+    return redirect('/')
+
+
+def add_quantity(request):
+    if request.method == "GET":
+        prod_id = request.GET['prod_id']
+        cart = CartItems.objects.get(Q(uid=prod_id))
+        cart_user = Cart.objects.get(user = request.user)
+        cart.quantity += 1
+        cart.save()
+        cart.total_amount = cart.product.price * cart.quantity
+        cart.save()
+
+        print(prod_id)
+        data = {
+            'quantity': cart.quantity,
+            'amount': cart.total_amount,
+            'totalAmount': cart_user.get_cart_total()
+        }
+        return JsonResponse(data)
+
+def sub_quantity(request):
+    if request.method == "GET":
+        prod_id = request.GET['prod_id']
+        cart = CartItems.objects.get(Q(uid=prod_id))
+        cart_user = Cart.objects.get(user = request.user)
+        if cart.quantity != 1:
+            cart.quantity -= 1
+            cart.save()
+        cart.total_amount = cart.product.price * cart.quantity
+        cart.save()
+
+        print(prod_id)
+        data = {
+            'quantity': cart.quantity,
+            'amount': cart.total_amount,
+            'totalAmount': cart_user.get_cart_total()
+        }
+        return JsonResponse(data)
+
+def add(request):
+    if request.method == "GET":
+        prod_id = request.GET['prod_id']
+        cart = CartItems.objects.get(Q(uid=prod_id))
+        cart.quantity += 1
+        cart.save()
+        carts = Cart.objects.filter(user = request.user)
+        c = carts.cart_items
+        for c in carts:
+            print(c.cart_items.uid)
+        cart.save()
+
+        print(prod_id)
+        data = {
+            'quantity': cart.quantity,
+            'totalamount': cart.total_amount
+        }
+        return JsonResponse(data)

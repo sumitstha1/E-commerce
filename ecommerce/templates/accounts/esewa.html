@@ -13,7 +13,7 @@
         <input value="EPAYTEST" name="scd" type="hidden">
         <label for="pid" class="form-label mt-3">Product ID</label>
         <input value="product_id_{{product.uid}}" name="pid" type="text" readonly class="form-control">
-        <input value="http://127.0.0.1:8000/esewa-verify/" type="hidden" name="su">
+        <input value="http://127.0.0.1:8000/accounts/esewa-verify/" type="hidden" name="su">
         <input value="{{request.build_absolute_uri}}" type="hidden" name="fu">
         <input value="Submit" type="submit" class="btn btn-success mt-5">
     </form>

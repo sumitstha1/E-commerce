@@ -22,6 +22,18 @@ class ColorVariant(BaseModel):
     def __str__(self) -> str:
         return self.color_name
 
+class Brands(BaseModel):
+    brand_name = models.CharField(max_length=100)
+    slug = models.SlugField(unique=True, blank=True, null=True)
+    brand_img = models.ImageField(upload_to="brands")
+
+    def save(self, *args, **kwargs):
+        self.slug = slugify(self.brand_name)
+        super(Brands, self).save(*args, **kwargs)
+
+    def __str__(self) -> str:
+        return self.brand_name
+
 class SizeVariant(BaseModel):
     size_name = models.CharField(max_length=100)
     price = models.IntegerField(default=0)
@@ -37,6 +49,7 @@ class Product(BaseModel):
     description = models.TextField()
     color_variant = models.ManyToManyField(ColorVariant, blank=True)
     size_variant = models.ManyToManyField(SizeVariant, blank=True)
+    brand_variant = models.ForeignKey(Brands, on_delete=models.CASCADE, related_name="product_cat")
 
     def save(self, *args, **kwargs):
         self.slug = slugify(self.product_name)
@@ -44,9 +57,6 @@ class Product(BaseModel):
 
     def __str__(self) -> str:
         return self.product_name
-
-    def get_product_price_by_size(self, size):
-        return self.price + SizeVariant.objects.get(size_name = size).price
 
 
 class ProductImage(BaseModel):
@@ -60,5 +70,5 @@ class Coupon(BaseModel):
     discount_price = models.IntegerField(default=100)
     minimum_amount = models.IntegerField(default=500)
 
-    def hello(self):
-        return "hello"
+    def __str__(self) -> str:
+        return self.coupon_code

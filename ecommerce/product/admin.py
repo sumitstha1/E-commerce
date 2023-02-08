@@ -5,6 +5,8 @@ from .models import *
 admin.site.register(Category)
 admin.site.register(Coupon)
 
+admin.site.register(Brands)
+
 class ProductImageAdmin(admin.StackedInline):
     model = ProductImage
 

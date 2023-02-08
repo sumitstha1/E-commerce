@@ -1,5 +1,9 @@
 {% extends 'base/base.html' %}
 
+{% block meta %}
+    <!-- <meta http-equiv="refresh" content="1"> -->
+{% endblock %}
+
 {% block start %}
 {% if user.is_authenticated %}
 <div class="container">
@@ -25,26 +29,29 @@
                 <div class="aside"><img src="/media/{{cart_item.product.product_images.first.image}}" class="img-sm"></div>
                 <figcaption class="info">
                     <a href="#" class="title text-dark">{{cart_item.product.product_name}}</a>
-                    <p class="text-muted small">Size: {{cart_item.size_variant}}, Color: blue, <br> Brand: Gucci</p>
+                    <p class="text-muted small">Size: {{cart_item.size_variant}}, Color: {{cart_item.color_variant}}</p>
                 </figcaption>
             </figure>
         </td>
         <td> 
-            <select class="form-control">
-                <option>1</option>
-                <option>2</option>	
-                <option>3</option>	
-                <option>4</option>	
-            </select> 
+            <div class="my-3 d-flex flex-row align-items-center">
+                <a class="min-btn btn btn-light" pid="{{cart_item.uid}}"> − </a>
+                <span id="quantity" class="mr-3 ml-3">{{cart_item.quantity}}</span>
+                <a class="add-btn btn btn-light" pid="{{cart_item.uid}}"> + </a>
+              </div>
         </td>
         <td> 
             <div class="price-wrap"> 
-                <var class="price">Rs.
+                <var id="{{cart_item.uid}}" class="price">Rs.
                     {{cart_item.get_product_price}}
                     .00</var> 
                 <small class="text-muted"> Rs. 
                     {{cart_item.product.price}}
                     .00 each </small> 
+                <small class="text-muted"> Rs. 
+                    {{cart_item.product.price}}
+                    .00 each </small> 
+
             </div> <!-- price-wrap .// -->
         </td>
         <td class="text-right"> 
@@ -100,7 +107,7 @@
                         {% endif %}
                         <dl class="dlist-align">
                           <dt>Total:</dt>
-                          <dd class="text-right  h5"><strong>Rs. {{ cart.get_cart_total }}</strong></dd>
+                          <dd class="text-right  h5"><strong id="totalAmt">Rs. {{ cart.get_cart_total }}</strong></dd>
                         </dl>
 
                         <hr>
@@ -121,4 +128,44 @@
     <a href="/accounts/login/" class="btn  btn-primary mt-5 ml-5"> Sign in </a>
         <a href="/accounts/register/" class="btn  btn-outline-primary mt-5 ml-2"> <span class="text">Register</span></a>
     {% endif %}
+
+    <script>
+        $('.add-btn').click(function(){
+            var id = $(this).attr("pid").toString();
+            var eml = this.parentNode.children[1]
+            console.log(id)
+            $.ajax({
+                type:"GET",
+                url:"/addquantity",
+                data:{
+                    prod_id:id
+                },
+                success:function(data){
+                    console.log("data= ", data);
+                    eml.innerText=data.quantity;
+                    document.getElementById(id).innerText = "Rs. " + data.amount + ".00";
+                    document.getElementById('totalAmt').innerText = "Rs. " + data.totalAmount + ".00";
+                }
+            })
+        })
+        $('.min-btn').click(function(){
+            var id = $(this).attr("pid").toString();
+            var eml = this.parentNode.children[1]
+            console.log(id)
+            $.ajax({
+                type:"GET",
+                url:"/subquantity",
+                data:{
+                    prod_id:id
+                },
+                success:function(data){
+                    console.log("data= ", data);
+                    eml.innerText=data.quantity;
+                    document.getElementById(id).innerText = "Rs. " + data.amount + " .00";
+                    document.getElementById('totalAmt').innerText = "Rs. " + data.totalAmount + ".00";
+                    
+                }
+            })
+        })
+    </script>
 {% endblock start %}
