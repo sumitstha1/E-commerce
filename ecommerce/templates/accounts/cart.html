@@ -28,7 +28,7 @@
             <figure class="itemside">
                 <div class="aside"><img src="/media/{{cart_item.product.product_images.first.image}}" class="img-sm"></div>
                 <figcaption class="info">
-                    <a href="#" class="title text-dark">{{cart_item.product.product_name}}</a>
+                    <a href="{% url 'get_product' cart_item.product.slug %}" class="title text-dark">{{cart_item.product.product_name}}</a>
                     <p class="text-muted small">Size: {{cart_item.size_variant}}, Color: {{cart_item.color_variant}}</p>
                 </figcaption>
             </figure>
@@ -45,9 +45,6 @@
                 <var id="{{cart_item.uid}}" class="price">Rs.
                     {{cart_item.get_product_price}}
                     .00</var> 
-                <small class="text-muted"> Rs. 
-                    {{cart_item.product.price}}
-                    .00 each </small> 
                 <small class="text-muted"> Rs. 
                     {{cart_item.product.price}}
                     .00 each </small> 
@@ -102,12 +99,12 @@
                         {% if cart.coupon %}
                         <dl class="dlist-align">
                           <dt>Discount:</dt>
-                          <dd class="text-right">Rs. {{ cart.coupon.discount_price }}</dd>
+                          <dd class="text-right">Rs. {{ cart.coupon.discount_price }}.00</dd>
                         </dl>
                         {% endif %}
                         <dl class="dlist-align">
                           <dt>Total:</dt>
-                          <dd class="text-right  h5"><strong id="totalAmt">Rs. {{ cart.get_cart_total }}</strong></dd>
+                          <dd class="text-right  h5"><strong id="totalAmt">Rs. {{ cart.get_cart_total }}.00</strong></dd>
                         </dl>
 
                         <hr>

@@ -56,23 +56,33 @@
     
     
     <dl class="row">
-      {% for brand in product.brand_variant.all %}
       <dt class="col-sm-3">Brand</dt>
-      <dd class="col-sm-9">{{brand.brand_name}}</dd>
-      {% endfor %}
-    
-      <dt class="col-sm-3">Color</dt>
-      <div class="btn-group">
-        <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-          Small button
-        </button>
-        <ul class="dropdown-menu">
-          {% for color in product.color_variant.all %}
-          <li>{{color.color_name}}</li>
-          
-          {% endfor %}
-        </ul>
-      </div>
+      <dd class="col-sm-9">{{product.brand_variant}}</dd>
+      
+      <dt class="col-sm-3">Category</dt>
+      <dd class="col-sm-9">{{product.category}}</dd>
+      
+      <div class="form-row">
+        
+        {% if product.color_variant.count %}
+        <div class="form-group col-md d-flex">
+          <dt>Colors: </dt>
+                <div class="mt-1">
+                  {% for color in product.color_variant.all %}
+                  
+                    <label class="ml-2">
+                      
+                      <div >{{color.color_name}}</div>
+                    </label>
+
+                  {% endfor %}
+
+                </div>
+        </div>
+        {% endif %}
+        <!-- col.// -->
+    </div> <!-- row.// -->
+
       <dt class="col-sm-3">Delivery</dt>
       <dd class="col-sm-9">Russia, USA, and Europe </dd>
     </dl>
