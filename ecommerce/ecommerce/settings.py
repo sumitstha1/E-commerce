@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 
 from pathlib import Path
 import os
+from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -21,10 +22,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-srxwvgu5$vzz@823y_8&_frkciv!%68wkj+1^e7$pw_4)_%*lx'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG')
 
 ALLOWED_HOSTS = []
 
@@ -84,12 +85,12 @@ WSGI_APPLICATION = 'ecommerce.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'ecom',
+        'ENGINE': config('DB_ENGINE'),
+        'NAME': config('DB_NAME'),
         'PASSWORD': '',
-        'HOST': "localhost",
-        'PORT': '3306',
-        'USER': 'root'
+        'HOST': config('DB_HOST'),
+        'PORT': config('DB_PORT'),
+        'USER': config('DB_USER')
     }
 }
 
@@ -149,8 +150,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Email backend
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend' # email send module
-EMAIL_HOST = 'smtp.gmail.com' # host google email server
-EMAIL_HOST_USER = 'edchristian.inventor@gmail.com' # host gmail account
-EMAIL_HOST_PASSWORD = 'cvqrogozlxoxdgnp' # host gmail app password
-EMAIL_USE_TLS = True # TLS Protocol
-EMAIL_PORT = '587' # TLS Port Number
+EMAIL_HOST = config('EMAIL_HOST') # host google email server
+EMAIL_HOST_USER = config('EMAIL_HOST_USER') # host gmail account
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD') # host gmail app password
+EMAIL_USE_TLS = config('EMAIL_USE_TLS') # TLS Protocol
+EMAIL_PORT = config('EMAIL_PORT') # TLS Port Number
