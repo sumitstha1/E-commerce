@@ -1,7 +1,12 @@
 {% extends 'base/base.html' %}
 
+{% block meta %}
+<meta name="description" content="This is the starting page of this website where you can explore different categories and products on the basis of arrival offers and trending">
+{% endblock meta %}
+
 {% block start %}
 
+<h3 class="text-danger text-center"><b>Note: </b>Demo Site</h3>
 <div class="container mt-5 pt-5">
     <div class="row">
         
@@ -27,5 +32,9 @@
     </div>
 
 </div>
+
+<script>
+    alert("Note: This website is created by Sumit Shrestha for the demo purpose only. The item buyed or added to card will not be delivered or considered as buyed item. The site is still under development so you may encounter some errors.")
+</script>
 
 {% endblock start %}
